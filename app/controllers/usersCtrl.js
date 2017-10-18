@@ -1,11 +1,8 @@
 var mongoose = require('mongoose');
 var User = require('../models/userModel');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
 
-
-var findAll = function(req, res){
-    User.find(function(err, result){
+var findAll = function(req, res, next){
+     User.find(function(err, result){
             if(err){
                 return res.json({success:false, message:'Somthing went wrong'});
             }else{
@@ -13,6 +10,21 @@ var findAll = function(req, res){
                 // next();
                 res.json({success:true, data: result});
             }
+    })
+}
+
+var findPage = function(req, res, next){
+   
+    console.log(req.params);
+    User.find()
+    .skip(parseInt(req.params.index) * parseInt(req.params.limit))
+    .limit(parseInt(req.params.limit))
+    // .sort([['createdAt', -1]])
+    .sort('-createdAt')
+    .exec(function(err, users){
+        if(err) return next(err);
+
+        res.json({success:true, data: users})
     })
 }
 
@@ -30,7 +42,7 @@ var createUser = function(req, res){
             if(err){
                 return res.json({success:false, message:'Error!'});
             }else{
-                res.json({success:true, message:'User was created'});
+                res.json({success:true, message:'User was created', data:user});
             }
 
     });  
@@ -67,6 +79,7 @@ var deleteUser = function(req, res, next){
 }
 
 exports.findAll = findAll;
+exports.findPage = findPage;
 exports.createUser = createUser;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;

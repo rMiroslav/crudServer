@@ -18,6 +18,10 @@ var User = new mongoose.Schema({
     mail_order:{
         type:Number,
         default:0
+    },
+    createdAt:{ 
+        type: Date,
+       default: Date.now
     }
 });
 
