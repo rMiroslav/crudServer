@@ -15,11 +15,11 @@ var findAll = function(req, res, next){
 
 var findPage = function(req, res, next){
    
-    console.log(req.params);
+    var skip = parseInt(req.params.index) * parseInt(req.params.limit);
+    console.log(skip)
     User.find()
-    .skip(parseInt(req.params.index) * parseInt(req.params.limit))
+    .skip(skip)
     .limit(parseInt(req.params.limit))
-    // .sort([['createdAt', -1]])
     .sort('-createdAt')
     .exec(function(err, users){
         if(err) return next(err);
